@@ -82,6 +82,15 @@ set FLASK_ENV=development
 ```bash
 python3 manage.py run
 ```
+### Testing the backend
+
+- Make sure that you have `pytest` installed
+
+- Run the test command
+
+```bash
+python3 manage.py test
+```
 
 ## Running the frontend
 
@@ -102,13 +111,3 @@ ext install ritwickdey.LiveServer
 - **Important Note** You have to open vscode in the root folder of the project.
 
 - **To avoid CORS errors** start the backend before the frontend, some browsers have CORS issues otherwise
-
-### Testing the backend
-
-- Make sure that you have `pytest` installed
-
-- Run the test command
-
-```bash
-python3 manage.py test
-```
