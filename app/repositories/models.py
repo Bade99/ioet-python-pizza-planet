@@ -19,7 +19,7 @@ class Order(db.Model):
 
     @validates("client_dni")
     def validate_client_dni(self, key, client_dni):
-        pattern = re.compile("^([A-Z][0-9]+)+$")
+        pattern = re.compile("^[1-9][0-9]*$")
         if not pattern.match(client_dni):
             raise ValueError("Invalid DNI")
         return client_dni
