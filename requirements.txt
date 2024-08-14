@@ -9,6 +9,7 @@ flask-marshmallow==0.14.0
 Flask-Migrate==3.1.0
 Flask-Script==2.0.6
 Flask-SQLAlchemy==2.5.1
+greenlet==1.1.2
 importlib-metadata==4.10.1
 importlib-resources==5.4.0
 iniconfig==1.1.1
@@ -33,4 +34,3 @@ SQLAlchemy==1.4.31
 toml==0.10.2
 Werkzeug==2.0.2
 zipp==3.7.0
-greenlet==1.1.2
