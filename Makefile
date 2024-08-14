@@ -16,6 +16,10 @@ start-db:
 	python manage.py db migrate
 	python manage.py db upgrade
 
+reset-db:
+	del pizza.sqlite
+	python manage.py db upgrade
+
 ## start |-| start the app
 start:
 	python manage.py run
