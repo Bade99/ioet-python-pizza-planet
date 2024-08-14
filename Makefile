@@ -16,6 +16,12 @@ start-db:
 	python manage.py db migrate
 	python manage.py db upgrade
 
+## update-db |-| update the database with the new fields
+update-db:
+	python manage.py db migrate
+	python manage.py db upgrade
+
+## reset-db |-| delete the database and regenerate it
 reset-db:
 	del pizza.sqlite
 	python manage.py db upgrade
