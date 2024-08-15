@@ -20,7 +20,8 @@ migrate.init_app(flask_app, db)
 
 @manager.command('test', with_appcontext=False)
 def test():
-    return pytest.main(['-v', './app/test'])
+    import subprocess
+    subprocess.call(['pytest', '-v', './app/test'])
 
 @manager.command('populate', with_appcontext=True)
 def populate():
