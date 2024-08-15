@@ -26,6 +26,10 @@ reset-db:
 	del pizza.sqlite
 	python manage.py db upgrade
 
+## populate-db |-| populate the database with test data
+populate-db:
+	python manage.py populate
+
 ## start |-| start the app
 start:
 	python manage.py run
