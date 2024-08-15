@@ -1,6 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError
 
 from ..common.utils import check_required_keys
+from datetime import datetime
 from ..repositories.managers import (
     IngredientManager,
     BeverageManager,
@@ -18,7 +19,7 @@ class OrderController(BaseController):
         "client_address",
         "client_phone",
         "size_id",
-    )  # TODO(fran): ingredients?
+    )
 
     @staticmethod
     def calculate_order_price(size_price: float, ingredients: list, beverages: list):
@@ -49,5 +50,14 @@ class OrderController(BaseController):
             price = cls.calculate_order_price(size.get("price"), ingredients, beverages)
             order_with_price = {**current_order, "total_price": price}
             return cls.manager.create(order_with_price, ingredients, beverages), None
+        except (SQLAlchemyError, ValueError, RuntimeError) as ex:
+            return None, str(ex)
+        
+    @classmethod
+    def get_all_between(cls, start_date: str, end_date: str):
+        try:
+            start = datetime.fromisoformat(start_date)
+            end = datetime.fromisoformat(end_date)
+            return cls.manager.get_all_between(start, end), None
         except (SQLAlchemyError, ValueError, RuntimeError) as ex:
             return None, str(ex)
