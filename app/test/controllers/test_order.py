@@ -3,16 +3,21 @@ from app.controllers import (IngredientController, OrderController,
                              SizeController)
 from app.controllers.base import BaseController
 from app.test.utils.functions import get_random_choice, shuffle_list
+from datetime import datetime
+from typing import Optional
 
 
-def __order(ingredients: list, size: dict, client_data: dict):
+def __order(ingredients: list, size: dict, client_data: dict, date: Optional[datetime] = None):
     ingredients = [ingredient.get('_id') for ingredient in ingredients]
     size_id = size.get('_id')
-    return {
+    order = {
         **client_data,
         'ingredients': ingredients,
         'size_id': size_id
     }
+    if date:
+        order["date"] = date
+    return order
 
 
 def __create_items(items: list, controller: BaseController):

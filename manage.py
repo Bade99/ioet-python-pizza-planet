@@ -10,6 +10,7 @@ from app.plugins import db
 # flake8: noqa
 from app.repositories.models import Ingredient, Beverage, Order, OrderDetail, Size
 
+from app.scripts.populate import populate_db
 
 manager = FlaskGroup(flask_app)
 
@@ -19,8 +20,12 @@ migrate.init_app(flask_app, db)
 
 @manager.command('test', with_appcontext=False)
 def test():
-    return pytest.main(['-v', './app/test'])
+    import subprocess
+    subprocess.call(['pytest', '-v', './app/test'])
 
+@manager.command('populate', with_appcontext=True)
+def populate():
+    return populate_db()
 
 if __name__ == '__main__':
     manager()

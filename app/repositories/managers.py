@@ -1,6 +1,8 @@
-from typing import Any, List, Optional, Sequence
+from typing import Any, List, Optional, Sequence, Tuple
 
 from sqlalchemy.sql import text, column
+
+from datetime import datetime
 
 from .models import Ingredient, Beverage, Order, OrderDetail, Size, db
 from .serializers import (
@@ -105,6 +107,15 @@ class OrderManager(BaseManager):
     @classmethod
     def update(cls):
         raise NotImplementedError(f"Method not suported for {cls.__name__}")
+
+    @classmethod
+    def get_all_between(
+        cls, start_date: datetime, end_date: datetime
+    ) -> Tuple[Any, Optional[str]]:
+        serializer = cls.serializer(many=True)
+        _objects = cls.model.query.filter(Order.date.between(start_date, end_date)).all()
+        result = serializer.dump(_objects)
+        return result
 
 
 class IndexManager(BaseManager):
