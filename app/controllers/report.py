@@ -42,7 +42,7 @@ class ReportController:
         ]
 
     @classmethod
-    def get_report(cls, start_date, end_date):
+    def get_report(cls, start_date: str, end_date: str):
         # TODO(fran): this whole logic may be better suited for a db query
 
         orders, error = OrderController.get_all_between(start_date, end_date)

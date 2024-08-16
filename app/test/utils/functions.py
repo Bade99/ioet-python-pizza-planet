@@ -1,6 +1,6 @@
+from typing import Any, Union
 import random
 import string
-from typing import Any, Union
 
 
 def get_random_string() -> str:

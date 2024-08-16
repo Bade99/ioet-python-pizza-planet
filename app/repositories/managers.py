@@ -74,9 +74,7 @@ class OrderManager(BaseManager):
     serializer = OrderSerializer
 
     @classmethod
-    def create(
-        cls, order_data: dict, ingredients: List[Ingredient], beverages: List[Beverage]
-    ):
+    def create(cls, order_data: dict, ingredients: List[Ingredient], beverages: List[Beverage]):
         new_order = cls.model(**order_data)
         cls.session.add(new_order)
         cls.session.flush()
