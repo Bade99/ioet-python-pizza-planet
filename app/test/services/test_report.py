@@ -7,7 +7,7 @@ def test_get_report_service(client, report_uri, init_report_data):
     report = response.json
     for report_section in [
         "top_ingredient",
-        # "top_beverage",
+        "top_beverage",
         "month_revenues",
         "top_clients",
     ]:

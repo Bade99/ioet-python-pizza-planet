@@ -39,7 +39,7 @@ def populate_db():
     )
 
     print(
-        f"Database populated with {num_sizes} sizes, {num_ingredients} ingredients, {num_beverages} beverages, and {num_orders} orders from {num_customers} new customers."
+        f"Database populated with {num_sizes} sizes, {num_ingredients} ingredients, {num_beverages} beverages, and {num_orders} orders from {num_customers} new customers."  # noqa: E501
     )
 
 
@@ -85,6 +85,6 @@ def generate_orders(
             ),
             "beverages": random.sample(beverages, random.randint(0, len(beverages))),
             "date": fake.date_time_between_dates(start_date, end_date),
-            # TODO(fran): this is actually a big security concern, we shouldn't allow a bad actor in the frontend to set an arbitrary date, but it is very useful for this population test, so we should maybe only allow it while testing
+            # TODO(fran): this is actually a big security concern, we shouldn't allow a bad actor in the frontend to set an arbitrary date, but it is very useful for this population test, so we should maybe only allow it while testing  # noqa: E501
         }
         OrderController.create(order)

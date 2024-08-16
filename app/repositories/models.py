@@ -23,7 +23,7 @@ class Order(db.Model):
         if not pattern.match(client_dni):
             raise ValueError("Invalid DNI")
         return client_dni
-    
+
     @validates("client_phone")
     def validate_client_phone(self, key, client_phone):
         pattern = re.compile("[0-9]{2,3}-?[0-9]{3,4}-?[0-9]{3,4}")
@@ -37,10 +37,12 @@ class Ingredient(db.Model):
     name = db.Column(db.String(80), nullable=False)
     price = db.Column(db.Float, nullable=False)
 
+
 class Beverage(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     price = db.Column(db.Float, nullable=False)
+
 
 class Size(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
