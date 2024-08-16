@@ -34,6 +34,22 @@ populate-db:
 start:
 	python manage.py run
 
-## run-tests |-| run tests
+## tests |-| run tests
 test:
-	python manage.py test
+	python -m pytest -v app/test
+
+## test-coverage |-| run test-coverage
+test-coverage:
+	python -m pytest -v --cov-report=term-missing --cov=app app/test
+
+## ci-test-coverage |-| same as test-coverage, but only to be used in github actions
+ci-test-coverage:
+	python -m pytest -v --cov-report=term-missing --cov=app app/test > pytest-coverage.txt
+
+## lint |-| run linter
+lint:
+	flake8 app/
+
+## format |-| run formatter
+format:
+	autopep8 --max-line-length 100 --experimental -i -r app/
