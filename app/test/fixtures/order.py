@@ -1,5 +1,5 @@
 import pytest
-
+import random
 from ..utils.functions import (shuffle_list, get_random_sequence,
                                get_random_string)
 
@@ -7,7 +7,7 @@ from ..utils.functions import (shuffle_list, get_random_sequence,
 def client_data_mock() -> dict:
     return {
         'client_address': get_random_string(),
-        'client_dni': get_random_sequence(),
+        'client_dni': str(random.randint(1000000, 9999999999)),
         'client_name': get_random_string(),
         'client_phone': get_random_sequence()
     }
