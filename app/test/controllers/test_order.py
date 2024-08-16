@@ -150,5 +150,5 @@ def test_get_all(app, ingredients, sizes, client_data):
 
 
 def test_get_all_between__invalid_date_returns_error(app):
-    orders_from_db, error = OrderController.get_all_between("invalid_date","invalid_date")
+    orders_from_db, error = OrderController.get_all_between("invalid_date", "invalid_date")
     pytest.assume(error)
