@@ -33,6 +33,7 @@ def prepare_order(create_ingredients, create_size, client_data) -> dict:
         'size_id': size_id
     }
 
+
 @pytest.fixture
 def create_order(client, order_uri, prepare_order):
     return client.post(order_uri, json=prepare_order)

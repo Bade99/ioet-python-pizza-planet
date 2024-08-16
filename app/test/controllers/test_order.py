@@ -1,5 +1,10 @@
 import pytest
-from app.controllers import IngredientController, OrderController, SizeController
+from app.controllers import (
+    IngredientController,
+    OrderController,
+    SizeController,
+    BeverageController,
+)
 from app.controllers.base import BaseController
 from app.test.utils.functions import get_random_choice, shuffle_list
 from datetime import datetime
@@ -7,11 +12,21 @@ from typing import Optional
 
 
 def __order(
-    ingredients: list, size: dict, client_data: dict, date: Optional[datetime] = None
+    ingredients: list,
+    beverages: list,
+    size: dict,
+    client_data: dict,
+    date: Optional[datetime] = None,
 ):
     ingredients = [ingredient.get("_id") for ingredient in ingredients]
+    beverages = [beverage.get("_id") for beverage in beverages]
     size_id = size.get("_id")
-    order = {**client_data, "ingredients": ingredients, "size_id": size_id}
+    order = {
+        **client_data,
+        "ingredients": ingredients,
+        "beverages": beverages,
+        "size_id": size_id,
+    }
     if date:
         order["date"] = date
     return order
@@ -33,32 +48,51 @@ def __create_sizes_and_ingredients(ingredients: list, sizes: list):
     ), created_ingredients
 
 
+def __create_beverages(beverages: list):
+    created_beverages = __create_items(beverages, BeverageController)
+    return created_beverages
+
+
 def test_create(app, ingredients, size, client_data):
     created_size, created_ingredients = __create_sizes_and_ingredients(
         ingredients, [size]
     )
-    order = __order(created_ingredients, created_size, client_data)
+    order = __order(created_ingredients, [], created_size, client_data)
     created_order, error = OrderController.create(order)
     size_id = order.pop("size_id", None)
     ingredient_ids = order.pop("ingredients", [])
     pytest.assume(error is None)
     for param, value in order.items():
-        pytest.assume(param in created_order)
-        pytest.assume(value == created_order[param])
-        pytest.assume(created_order["_id"])
-        pytest.assume(size_id == created_order["size"]["_id"])
+        if param != "beverages":
+            pytest.assume(param in created_order)
+            pytest.assume(value == created_order[param])
+            pytest.assume(created_order["_id"])
+            pytest.assume(size_id == created_order["size"]["_id"])
 
-        ingredients_in_detail = set(
-            item["ingredient"]["_id"] for item in created_order["detail"]
-        )
-        pytest.assume(not ingredients_in_detail.difference(ingredient_ids))
+            ingredients_in_detail = set(
+                item["ingredient"]["_id"] for item in created_order["detail"]
+            )
+            pytest.assume(not ingredients_in_detail.difference(ingredient_ids))
+
+
+def test_create__missing_keys_returns_error(app):
+    order = {"invalid_key": "invalid_value"}
+    created_order, error = OrderController.create(order)
+    pytest.assume(error)
+
+
+def test_create_invalid_size_returns_error(app, ingredients, size, client_data):
+    invalid_size = {"size_id": "invalid_size_id"}
+    order = {**client_data, **invalid_size}
+    created_order, error = OrderController.create(order)
+    pytest.assume(error)
 
 
 def test_calculate_order_price(app, ingredients, size, client_data):
     created_size, created_ingredients = __create_sizes_and_ingredients(
         ingredients, [size]
     )
-    order = __order(created_ingredients, created_size, client_data)
+    order = __order(created_ingredients, [], created_size, client_data)
     created_order, _ = OrderController.create(order)
     pytest.assume(
         created_order["total_price"]
@@ -74,7 +108,7 @@ def test_get_by_id(app, ingredients, size, client_data):
     created_size, created_ingredients = __create_sizes_and_ingredients(
         ingredients, [size]
     )
-    order = __order(created_ingredients, created_size, client_data)
+    order = __order(created_ingredients, [], created_size, client_data)
     created_order, _ = OrderController.create(order)
     order_from_db, error = OrderController.get_by_id(created_order["_id"])
     size_id = order.pop("size_id", None)
@@ -98,6 +132,7 @@ def test_get_all(app, ingredients, sizes, client_data):
     for _ in range(5):
         order = __order(
             shuffle_list(created_ingredients)[:3],
+            [],
             get_random_choice(created_sizes),
             client_data,
         )
@@ -112,3 +147,8 @@ def test_get_all(app, ingredients, sizes, client_data):
         assert current_id in searchable_orders
         for param, value in created_order.items():
             pytest.assume(searchable_orders[current_id][param] == value)
+
+
+def test_get_all_between__invalid_date_returns_error(app):
+    orders_from_db, error = OrderController.get_all_between("invalid_date","invalid_date")
+    pytest.assume(error)

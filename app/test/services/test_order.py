@@ -11,6 +11,7 @@ def test_create_order_service(create_order):
     pytest.assume(order["client_phone"])
     pytest.assume(order["total_price"])
 
+
 def test_get_order_by_id_service(client, create_order, order_uri):
     current_order = create_order.json
     response = client.get(f'{order_uri}id/{current_order["_id"]}')
@@ -18,6 +19,7 @@ def test_get_order_by_id_service(client, create_order, order_uri):
     returned_order = response.json
     for param, value in current_order.items():
         pytest.assume(returned_order[param] == value)
+
 
 def test_get_orders_service(client, create_orders, order_uri):
     response = client.get(order_uri)

@@ -27,6 +27,16 @@ def test_update(app, ingredient: dict):
         pytest.assume(ingredient_from_database[param] == value)
 
 
+def test_update__invalid_id_returns_error(app):
+    _, error = IngredientController.update({"_id": "invalid_id"})
+    pytest.assume(error)
+
+
+def test_update__no_id_returns_error(app):
+    _, error = IngredientController.update({})
+    pytest.assume(error)
+
+
 def test_get_by_id(app, ingredient: dict):
     created_ingredient, _ = IngredientController.create(ingredient)
     ingredient_from_db, error = IngredientController.get_by_id(
