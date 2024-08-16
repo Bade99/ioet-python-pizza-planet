@@ -1,4 +1,4 @@
-name: ci_tests
+name: CI Lint, Test and Coverage
 
 on:
   push:
