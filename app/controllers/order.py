@@ -52,7 +52,7 @@ class OrderController(BaseController):
             return cls.manager.create(order_with_price, ingredients, beverages), None
         except (SQLAlchemyError, ValueError, RuntimeError) as ex:
             return None, str(ex)
-        
+
     @classmethod
     def get_all_between(cls, start_date: str, end_date: str):
         try:

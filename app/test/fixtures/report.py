@@ -9,6 +9,7 @@ from app.test.controllers.test_order import __create_sizes_and_ingredients, __or
 def report_uri():
     return "/report?startDate=2024-01-01&endDate=2024-08-15"
 
+
 @pytest.fixture
 def init_report_data(ingredients, sizes, client_data):
     new_sizes, new_ingredients = __create_sizes_and_ingredients(
