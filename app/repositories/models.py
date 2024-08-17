@@ -1,7 +1,7 @@
 from datetime import datetime
 from app.plugins import db
 from sqlalchemy.orm import validates
-import re
+from .validators import dni_validator, phone_validator, price_validator
 
 
 class Order(db.Model):
@@ -19,17 +19,15 @@ class Order(db.Model):
 
     @validates("client_dni")
     def validate_client_dni(self, key, client_dni):
-        pattern = re.compile("^[1-9][0-9]*$")
-        if not pattern.match(client_dni):
-            raise ValueError("Invalid DNI")
-        return client_dni
+        return dni_validator(client_dni)
 
     @validates("client_phone")
     def validate_client_phone(self, key, client_phone):
-        pattern = re.compile("[0-9]{2,3}-?[0-9]{3,4}-?[0-9]{3,4}")
-        if not pattern.match(client_phone):
-            raise ValueError("Invalid Phone Number")
-        return client_phone
+        return phone_validator(client_phone)
+
+    @validates("total_price")
+    def validate_total_price(self, key, total_price):
+        return price_validator(total_price, float("inf"))
 
 
 class Ingredient(db.Model):
@@ -37,11 +35,27 @@ class Ingredient(db.Model):
     name = db.Column(db.String(80), nullable=False)
     price = db.Column(db.Float, nullable=False)
 
+    @staticmethod
+    def max_price():
+        return 10
+
+    @validates("price")
+    def validate_ingredient_price(self, key, price):
+        return price_validator(price, self.max_price())
+
 
 class Beverage(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     price = db.Column(db.Float, nullable=False)
+
+    @staticmethod
+    def max_price():
+        return 10
+
+    @validates("price")
+    def validate_beverage_price(self, key, price):
+        return price_validator(price, self.max_price())
 
 
 class Size(db.Model):
@@ -49,13 +63,20 @@ class Size(db.Model):
     name = db.Column(db.String(80), nullable=False)
     price = db.Column(db.Float, nullable=False)
 
+    @staticmethod
+    def max_price():
+        return 30
+
+    @validates("price")
+    def validate_size_price(self, key, price):
+        return price_validator(price, self.max_price())
+
 
 class OrderDetail(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey("order._id"))
     ingredient_id = db.Column(db.Integer, db.ForeignKey("ingredient._id"))
     ingredient = db.relationship("Ingredient", backref=db.backref("ingredient"))
-    ingredient_price = db.Column(db.Float)
+    price = db.Column(db.Float)
     beverage_id = db.Column(db.Integer, db.ForeignKey("beverage._id"))
     beverage = db.relationship("Beverage", backref=db.backref("beverage"))
-    beverage_price = db.Column(db.Float)

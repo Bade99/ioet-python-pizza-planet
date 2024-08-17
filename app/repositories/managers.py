@@ -84,7 +84,7 @@ class OrderManager(BaseManager):
                 OrderDetail(
                     order_id=new_order._id,
                     ingredient_id=ingredient._id,
-                    ingredient_price=ingredient.price,
+                    price=ingredient.price,
                 )
                 for ingredient in ingredients
             )
@@ -94,7 +94,7 @@ class OrderManager(BaseManager):
                 OrderDetail(
                     order_id=new_order._id,
                     beverage_id=beverage._id,
-                    beverage_price=beverage.price,
+                    price=beverage.price,
                 )
                 for beverage in beverages
             )

@@ -1,12 +1,13 @@
 import pytest
 from app.controllers import IngredientController
 from ..utils.functions import get_random_price, get_random_string
+from app.repositories.models import Ingredient
 
 
 def ingredient_mock() -> dict:
     return {
         'name': get_random_string(),
-        'price': get_random_price(10, 20)
+        'price': get_random_price(.01, Ingredient.max_price())
     }
 
 

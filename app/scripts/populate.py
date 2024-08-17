@@ -8,6 +8,7 @@ from ..controllers import (
     BeverageController,
     SizeController,
 )
+from ..repositories.models import Ingredient, Beverage, Size
 
 
 def populate_db():
@@ -19,9 +20,9 @@ def populate_db():
     start_date = datetime(2024, 1, 1)
     end_date = datetime(2024, 8, 15)
 
-    max_ingredient_price = 10
-    max_beverage_price = max_ingredient_price
-    max_size_price = 30
+    max_ingredient_price = Ingredient.max_price()
+    max_beverage_price = Beverage.max_price()
+    max_size_price = Size.max_price()
 
     customers = prepare_customers(num_customers)
 
