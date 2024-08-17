@@ -34,11 +34,7 @@ class OrderDetailSerializer(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = OrderDetail
         load_instance = True
-        fields = (
-            'price',
-            'ingredient',
-            'beverage'
-        )
+        fields = ('price', 'ingredient', 'beverage')
 
 
 class OrderSerializer(ma.SQLAlchemyAutoSchema):

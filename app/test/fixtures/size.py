@@ -3,6 +3,7 @@ from app.controllers import SizeController
 from ..utils.functions import get_random_price, get_random_string
 from app.repositories.models import Size
 
+
 def size_mock() -> dict:
     return {
         'name': get_random_string(),
