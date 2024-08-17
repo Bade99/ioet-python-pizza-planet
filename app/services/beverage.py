@@ -2,7 +2,7 @@ from app.common.http_methods import GET, POST, PUT
 from flask import Blueprint, request
 
 from ..controllers import BeverageController
-from .base import execute, execute__with_not_found
+from .decorators import response, response__with_not_found
 
 
 beverage = Blueprint('beverage', __name__)
@@ -10,20 +10,24 @@ controller = BeverageController
 
 
 @beverage.route('/', methods=POST)
+@response
 def create_beverage():
-    return execute(controller.create, request.json)
+    return controller.create(request.json)
 
 
 @beverage.route('/', methods=PUT)
+@response
 def update_beverage():
-    return execute(controller.update, request.json)
+    return controller.update(request.json)
 
 
 @beverage.route('/id/<_id>', methods=GET)
+@response__with_not_found
 def get_beverage_by_id(_id: int):
-    return execute__with_not_found(controller.get_by_id, _id)
+    return controller.get_by_id(_id)
 
 
 @beverage.route('/', methods=GET)
+@response__with_not_found
 def get_beverages():
-    return execute__with_not_found(controller.get_all)
+    return controller.get_all()
