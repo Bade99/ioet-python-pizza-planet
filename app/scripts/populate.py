@@ -1,3 +1,4 @@
+from typing import List
 from datetime import datetime
 from faker import Faker
 import random
@@ -7,6 +8,7 @@ from ..controllers import (
     BeverageController,
     SizeController,
 )
+from ..repositories.models import Ingredient, Beverage, Size
 
 
 def populate_db():
@@ -18,9 +20,9 @@ def populate_db():
     start_date = datetime(2024, 1, 1)
     end_date = datetime(2024, 8, 15)
 
-    max_ingredient_price = 10
-    max_beverage_price = max_ingredient_price
-    max_size_price = 30
+    max_ingredient_price = Ingredient.max_price()
+    max_beverage_price = Beverage.max_price()
+    max_size_price = Size.max_price()
 
     customers = prepare_customers(num_customers)
 
@@ -43,7 +45,7 @@ def populate_db():
     )
 
 
-def prepare_customers(num_customers):
+def prepare_customers(num_customers: int):
     fake = Faker()
     customers = []
     for _ in range(num_customers):
@@ -58,7 +60,7 @@ def prepare_customers(num_customers):
     return customers
 
 
-def generate_additionals(controller, num_additionals, max_additional_price):
+def generate_additionals(controller, num_additionals: int, max_additional_price: float):
     fake = Faker()
     additionals = []
     for _ in range(num_additionals):
@@ -73,16 +75,14 @@ def generate_additionals(controller, num_additionals, max_additional_price):
 
 
 def generate_orders(
-    num_orders, start_date, end_date, customers, sizes, ingredients, beverages
-):
+        num_orders: int, start_date: datetime, end_date: datetime, customers: List[dict],
+        sizes: list, ingredients: list, beverages: list):
     fake = Faker()
     for _ in range(num_orders):
         order = {
             **random.choice(customers),
             "size_id": random.choice(sizes),
-            "ingredients": random.sample(
-                ingredients, random.randint(0, len(ingredients))
-            ),
+            "ingredients": random.sample(ingredients, random.randint(0, len(ingredients))),
             "beverages": random.sample(beverages, random.randint(0, len(beverages))),
             "date": fake.date_time_between_dates(start_date, end_date),
             # TODO(fran): this is actually a big security concern, we shouldn't allow a bad actor in the frontend to set an arbitrary date, but it is very useful for this population test, so we should maybe only allow it while testing  # noqa: E501

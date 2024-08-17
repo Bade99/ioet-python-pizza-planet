@@ -1,12 +1,7 @@
 import pytest
-
+from typing import Callable
 from datetime import datetime
-from app.controllers.order import OrderController
-from app.test.controllers.test_order import (
-    __create_sizes_and_ingredients,
-    __order,
-    __create_beverages,
-)
+from app.test.fixtures.order import create_order__with_controller
 
 
 @pytest.fixture
@@ -15,8 +10,14 @@ def report_uri():
 
 
 @pytest.fixture
-def init_report_data(ingredients, sizes, beverages, client_data):
-    new_sizes, new_ingredients = __create_sizes_and_ingredients(ingredients, sizes)
-    new_beverages = __create_beverages(beverages)
-    order = __order(new_ingredients, new_beverages, new_sizes[0], client_data, datetime(2024, 3, 3))
-    OrderController.create(order)
+def init_report_data(
+    create_size__with_controller: Callable,
+    create_ingredients__with_controller: Callable,
+    create_beverages__with_controller: Callable,
+    client_data: dict,
+):
+    created_size = create_size__with_controller
+    created_ingredients = create_ingredients__with_controller
+    created_beverages = create_beverages__with_controller
+    create_order__with_controller(created_ingredients, created_beverages,
+                                  created_size, client_data, datetime(2024, 3, 3))
